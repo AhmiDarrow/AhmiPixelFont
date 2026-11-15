@@ -1,5 +1,9 @@
 # Changelog
 
+## License update — 2026-11-14
+
+- Ahmi Pixel is now open source under the SIL Open Font License 1.1 (previously all rights reserved). The font files are unchanged.
+
 ## 1.0.0 — 2026-11-14
 
 First public release. The font's own version string is 1.000.

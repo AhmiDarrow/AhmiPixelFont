@@ -16,7 +16,7 @@ Version 1.000. The public release is [v1.0.0](https://github.com/AhmiDarrow/Ahmi
 | `build.py` | Turns the glyph file into the font files |
 | `check.py` | Fails if any two characters could be mistaken for each other |
 | `specimen.html` | Open in a browser to see every character |
-| `LICENSE` | All rights reserved. No open license has been chosen yet |
+| `LICENSE` | SIL Open Font License 1.1 |
 | `CHANGELOG.md` | Release history |
 
 ## Using it on a web page
@@ -65,4 +65,4 @@ python build.py
 
 ## License
 
-No license has been chosen yet, so all rights are reserved for now.
+Ahmi Pixel is licensed under the [SIL Open Font License, Version 1.1](LICENSE). You can use it freely in personal and commercial projects, embed it in apps and websites, and modify or redistribute it under the same license. The font itself may not be sold on its own.

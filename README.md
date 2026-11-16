@@ -3,7 +3,7 @@
 An 8-bit style typeface in two weights, drawn for [Ahmi Darrow's site](https://r20ohhka.rf.gd/).
 It was made because the pixel font the site used before had a capital C that read as an O and a 5 that read as an S. In Ahmi Pixel every look-alike pair is checked by a script before the fonts are built.
 
-Version 1.100 (on this branch). The last public release is [v1.0.0](https://github.com/AhmiDarrow/AhmiPixelFont/releases/tag/v1.0.0).
+Version 1.100. The latest release is [v1.1.0](https://github.com/AhmiDarrow/AhmiPixelFont/releases/tag/v1.1.0) (font version 1.100).
 
 ![Ahmi Pixel specimen](specimen.png)
 

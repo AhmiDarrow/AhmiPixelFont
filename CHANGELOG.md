@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.100 — unreleased
+## 1.100 — 2026-11-16 (release v1.1.0)
 
 - 583 characters per weight (was 109): all of Latin-1 and Latin Extended-A, Romanian Ș ș Ț ț and ƒ, spacing accents, modern Greek, Cyrillic for Russian, Ukrainian, Belarusian, Bulgarian, Serbian, Macedonian, Kazakh and Central Asian languages, general punctuation and spaces, currency signs, ™ №, arrows, maths, and the shapes the egui toolkit draws.
 - Accented letters are composed by `build.py` from a base letter and an accent drawn once in `glyphs/marks.txt`. Accented capitals are 6 or 5 pixels tall so the accent fits inside the em.

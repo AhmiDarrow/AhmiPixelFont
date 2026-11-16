@@ -1,0 +1,212 @@
+# Ahmi Pixel — accent marks and the shortened capitals they sit on
+#
+# Marks are drawn once here and placed by build.py (see the top of
+# ahmi-pixel.txt). Over lowercase letters, two-row marks fill the 8th row
+# of the em and the cap-line row, with the empty row between mark and
+# letter that the i already has. Over capitals the one-row marks (dot,
+# diaeresis) leave the capital 6 rows tall and two-row marks
+# leave it 5 rows tall, the way 8-bit system fonts fitted accents into an
+# 8-pixel cell. A mark named "<mark>.cap" would be used over capitals
+# instead; none is needed yet.
+#
+# Each mark is drawn in a box as wide as the letters it sits on: 5 columns
+# for odd-width bases, 6 for even ones (build.py centres the box on the
+# base). The shapes were chosen by trying the candidates against every pair
+# of marks that share a letter (e/é/è/ê/ë/ē/ĕ/ė/ę/ě ...), so that any two
+# differ by at least 3 pixels in Regular and in Bold, where neighbouring
+# pixels merge: acute leans over the right half and grave over the left,
+# the dot is the i's dot, the caron is a solid wedge so that it never
+# shares the dot's pixel, the macron sits one row higher than the
+# diaeresis (so over capitals it takes two rows and an Ā is shorter than an
+# Ä), the ring is a round arch, and the narrow tilde is the hump and
+# trough of the ~ (the full wave needs six columns, which even-width
+# letters such as O and N get).
+
+@part m.acute above
+....#
+...#.
+
+@part m.acute above
+.....#
+....#.
+
+@part m.grave above
+#....
+.#...
+
+@part m.grave above
+#.....
+.#....
+
+@part m.circumflex above
+..#..
+.#.#.
+
+@part m.circumflex above
+..##..
+.#..#.
+
+@part m.caron above
+.###.
+..#..
+
+@part m.caron above
+.####.
+..##..
+
+@part m.breve above
+#...#
+.###.
+
+@part m.breve above
+#....#
+.####.
+
+@part m.ring above
+.###.
+#...#
+
+@part m.ring above
+.####.
+#....#
+
+@part m.tilde above
+.##..
+...##
+
+@part m.tilde above
+.##..#
+#..##.
+
+@part m.macron above
+#####
+.....
+
+@part m.macron above
+######
+......
+
+@part m.dot above
+#
+
+@part m.diaeresis above
+#...#
+
+@part m.diaeresis above
+#....#
+
+@part m.diaeresis above
+#..#
+
+@part m.dblacute above
+.#.#.
+#.#..
+
+@part m.dblacute above
+.#..#.
+#..#..
+
+@part m.dialytikatonos above
+..#..
+##.##
+
+@part m.commaabove above
+...#.
+...#.
+
+@part m.cedilla below
+.#
+##
+
+@part m.commabelow below
+.#
+#.
+
+@part m.ogonek ogonek
+#.
+.#
+
+@part m.caronside side
+.#
+.#
+#.
+
+@part m.tonos tonos
+.#
+#.
+
+# Capitals redrawn shorter where dropping a repeated row does not work,
+# or where it would close up an opening (a short C keeps the open mouth of
+# the lowercase c, so it never reads as an o).
+
+@part C.6
+.####
+#....
+#....
+#....
+#....
+.####
+
+@part C.5
+.####
+#....
+#....
+#....
+.####
+
+@part Gamma.5
+#####
+#....
+#....
+#....
+##...
+
+@part J.5
+....#
+....#
+....#
+#...#
+.###.
+
+@part G.5
+.####
+#....
+#..##
+#...#
+.###.
+
+@part N.5
+#....#
+##...#
+#.##.#
+#...##
+#....#
+
+@part R.5
+####.
+#...#
+####.
+#..#.
+#...#
+
+@part Z.6
+#####
+....#
+...#.
+..#..
+.#...
+#####
+
+@part Z.5
+#####
+...#.
+..#..
+.#...
+#####
+
+@part K.5
+#...#
+#..#.
+###..
+#..#.
+#...#

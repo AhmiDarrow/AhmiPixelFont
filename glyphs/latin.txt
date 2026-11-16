@@ -1,0 +1,483 @@
+# Ahmi Pixel — Latin-1 Supplement, Latin Extended-A and the Romanian
+# letters of Latin Extended-B. Accented letters are composed from the base
+# letter and a mark in marks.txt; letters with their own shape are drawn.
+
+# ---------------------------------------------------------------- drawn
+
+@ U+0131 dotlessi
+...
+...
+##.
+.#.
+.#.
+.#.
+###
+
+@part dotlessj
+....
+....
+..##
+...#
+...#
+...#
+...#
+#..#
+.##.
+
+@ U+00C6 AE
+..#####
+.#.#...
+#..#...
+#######
+#..#...
+#..#...
+#..####
+
+@ U+00E6 ae
+.......
+.......
+.##.##.
+...#..#
+.######
+#..#...
+.##.###
+
+@ U+00D0 Eth
+..###..
+..#..#.
+..#...#
+####..#
+..#...#
+..#..#.
+..###..
+
+@ U+00F0 eth
+..##.
+.##..
+...#.
+.####
+#...#
+#...#
+.###.
+
+@ U+00D8 Oslash
+.####.
+#....#
+#...##
+#..#.#
+#.#..#
+##...#
+.####.
+
+@ U+00F8 oslash
+.....
+.....
+.###.
+#..##
+#.#.#
+##..#
+.###.
+
+@bold U+00F8 oslash
+......
+......
+.####.
+##.###
+###.##
+###.##
+.####.
+
+@ U+00DE Thorn
+#....
+####.
+#...#
+#...#
+####.
+#....
+#....
+
+@ U+00FE thorn
+#....
+#....
+####.
+#...#
+#...#
+#...#
+####.
+#....
+#....
+
+@ U+00DF germandbls
+.###.
+#...#
+#...#
+#..#.
+#...#
+#...#
+#..#.
+
+@ U+0111 dcroat
+....#.
+..####
+.####.
+#...#.
+#...#.
+#...#.
+.####.
+
+@ U+0126 Hbar
+.#...#.
+#######
+.#...#.
+.#####.
+.#...#.
+.#...#.
+.#...#.
+
+@ U+0127 hbar
+.#....
+####..
+.####.
+.#...#
+.#...#
+.#...#
+.#...#
+
+@ U+0132 IJ
+#.....#
+#.....#
+#.....#
+#.....#
+#..#..#
+#..#..#
+#...##.
+
+@ U+0133 ij
+#..#
+....
+#..#
+#..#
+#..#
+#..#
+#..#
+...#
+.##.
+
+@ U+0138 kgreenlandic
+....
+....
+#..#
+#.#.
+##..
+#.#.
+#..#
+
+@ U+013F Ldot
+#....
+#....
+#....
+#..##
+#..##
+#....
+#####
+
+@ U+0140 ldot
+#....
+#....
+#....
+#..##
+#..##
+#....
+.#...
+
+@ U+0141 Lslash
+.#....
+.#....
+.#.#..
+.##...
+##....
+.#....
+.#####
+
+@ U+0142 lslash
+.#..
+.#..
+.#.#
+.##.
+##..
+.#..
+..#.
+
+@ U+0149 napostrophe
+.#.....
+#......
+..####.
+..#...#
+..#...#
+..#...#
+..#...#
+
+@ U+014A Eng
+#...#
+##..#
+#.#.#
+#..##
+#...#
+#...#
+#...#
+....#
+..##.
+
+@ U+014B eng
+.....
+.....
+####.
+#...#
+#...#
+#...#
+#...#
+....#
+..##.
+
+@ U+0152 OE
+.######
+#..#...
+#..#...
+#..####
+#..#...
+#..#...
+.######
+
+@ U+0153 oe
+.......
+.......
+.##.##.
+#..#..#
+#..####
+#..#...
+.##.###
+
+@ U+0166 Tbar
+#####
+..#..
+..#..
+#####
+..#..
+..#..
+..#..
+
+@ U+0167 tbar
+.#..
+.#..
+####
+.#..
+####
+.#..
+..##
+
+@ U+017F longs
+..##
+.#..
+.#..
+.#..
+.#..
+.#..
+##..
+
+@ U+0192 florin
+...##
+..#..
+.####
+..#..
+..#..
+..#..
+..#..
+..#..
+##...
+
+# ---------------------------------------------------------------- composed
+
+@ U+0110 Dcroat = Eth
+
+@ U+00C0 Agrave = A + m.grave
+@ U+00C1 Aacute = A + m.acute
+@ U+00C2 Acircumflex = A + m.circumflex
+@ U+00C3 Atilde = A + m.tilde
+@ U+00C4 Adieresis = A + m.diaeresis
+@ U+00C5 Aring = A + m.ring
+@ U+00C7 Ccedilla = C + m.cedilla
+@ U+00C8 Egrave = E + m.grave
+@ U+00C9 Eacute = E + m.acute
+@ U+00CA Ecircumflex = E + m.circumflex
+@ U+00CB Edieresis = E + m.diaeresis
+@ U+00CC Igrave = I + m.grave
+@ U+00CD Iacute = I + m.acute
+@ U+00CE Icircumflex = I + m.circumflex
+@ U+00CF Idieresis = I + m.diaeresis
+@ U+00D1 Ntilde = N + m.tilde
+@ U+00D2 Ograve = O + m.grave
+@ U+00D3 Oacute = O + m.acute
+@ U+00D4 Ocircumflex = O + m.circumflex
+@ U+00D5 Otilde = O + m.tilde
+@ U+00D6 Odieresis = O + m.diaeresis
+@ U+00D9 Ugrave = U + m.grave
+@ U+00DA Uacute = U + m.acute
+@ U+00DB Ucircumflex = U + m.circumflex
+@ U+00DC Udieresis = U + m.diaeresis
+@ U+00DD Yacute = Y + m.acute
+
+@ U+00E0 agrave = a + m.grave
+@ U+00E1 aacute = a + m.acute
+@ U+00E2 acircumflex = a + m.circumflex
+@ U+00E3 atilde = a + m.tilde
+@ U+00E4 adieresis = a + m.diaeresis
+@ U+00E5 aring = a + m.ring
+@ U+00E7 ccedilla = c + m.cedilla
+@ U+00E8 egrave = e + m.grave
+@ U+00E9 eacute = e + m.acute
+@ U+00EA ecircumflex = e + m.circumflex
+@ U+00EB edieresis = e + m.diaeresis
+@ U+00EC igrave = dotlessi + m.grave
+@ U+00ED iacute = dotlessi + m.acute
+@ U+00EE icircumflex = dotlessi + m.circumflex
+@ U+00EF idieresis = dotlessi + m.diaeresis
+@ U+00F1 ntilde = n + m.tilde
+@ U+00F2 ograve = o + m.grave
+@ U+00F3 oacute = o + m.acute
+@ U+00F4 ocircumflex = o + m.circumflex
+@ U+00F5 otilde = o + m.tilde
+@ U+00F6 odieresis = o + m.diaeresis
+@ U+00F9 ugrave = u + m.grave
+@ U+00FA uacute = u + m.acute
+@ U+00FB ucircumflex = u + m.circumflex
+@ U+00FC udieresis = u + m.diaeresis
+@ U+00FD yacute = y + m.acute
+@ U+00FF ydieresis = y + m.diaeresis
+
+@ U+0100 Amacron = A + m.macron
+@ U+0101 amacron = a + m.macron
+@ U+0102 Abreve = A + m.breve
+@ U+0103 abreve = a + m.breve
+@ U+0104 Aogonek = A + m.ogonek
+@ U+0105 aogonek = a + m.ogonek
+@ U+0106 Cacute = C + m.acute
+@ U+0107 cacute = c + m.acute
+@ U+0108 Ccircumflex = C + m.circumflex
+@ U+0109 ccircumflex = c + m.circumflex
+@ U+010A Cdotaccent = C + m.dot
+@ U+010B cdotaccent = c + m.dot
+@ U+010C Ccaron = C + m.caron
+@ U+010D ccaron = c + m.caron
+@ U+010E Dcaron = D + m.caron
+@ U+010F dcaron = d + m.caronside
+@ U+0112 Emacron = E + m.macron
+@ U+0113 emacron = e + m.macron
+@ U+0114 Ebreve = E + m.breve
+@ U+0115 ebreve = e + m.breve
+@ U+0116 Edotaccent = E + m.dot
+@ U+0117 edotaccent = e + m.dot
+@ U+0118 Eogonek = E + m.ogonek
+@ U+0119 eogonek = e + m.ogonek
+@ U+011A Ecaron = E + m.caron
+@ U+011B ecaron = e + m.caron
+@ U+011C Gcircumflex = G + m.circumflex
+@ U+011D gcircumflex = g + m.circumflex
+@ U+011E Gbreve = G + m.breve
+@ U+011F gbreve = g + m.breve
+@ U+0120 Gdotaccent = G + m.dot
+@ U+0121 gdotaccent = g + m.dot
+@ U+0122 Gcommaaccent = G + m.commabelow
+@ U+0123 gcommaaccent = g + m.commaabove
+@ U+0124 Hcircumflex = H + m.circumflex
+@ U+0125 hcircumflex = h + m.circumflex
+@ U+0128 Itilde = I + m.tilde
+@ U+0129 itilde = dotlessi + m.tilde
+@ U+012A Imacron = I + m.macron
+@ U+012B imacron = dotlessi + m.macron
+@ U+012C Ibreve = I + m.breve
+@ U+012D ibreve = dotlessi + m.breve
+@ U+012E Iogonek = I + m.ogonek
+@ U+012F iogonek = i + m.ogonek
+@ U+0130 Idotaccent = I + m.dot
+@ U+0134 Jcircumflex = J + m.circumflex
+@ U+0135 jcircumflex = dotlessj + m.circumflex@1
+@ U+0136 Kcommaaccent = K + m.commabelow@0
+@ U+0137 kcommaaccent = k + m.commabelow@2
+@ U+0139 Lacute = L + m.acute
+@ U+013A lacute = l + m.acute
+@ U+013B Lcommaaccent = L + m.commabelow
+@ U+013C lcommaaccent = l + m.commabelow
+@ U+013D Lcaron = L + m.caronside@2
+@ U+013E lcaron = l + m.caronside
+@ U+0143 Nacute = N + m.acute
+@ U+0144 nacute = n + m.acute
+@ U+0145 Ncommaaccent = N + m.commabelow
+@ U+0146 ncommaaccent = n + m.commabelow@0
+@ U+0147 Ncaron = N + m.caron
+@ U+0148 ncaron = n + m.caron
+@ U+014C Omacron = O + m.macron
+@ U+014D omacron = o + m.macron
+@ U+014E Obreve = O + m.breve
+@ U+014F obreve = o + m.breve
+@ U+0150 Ohungarumlaut = O + m.dblacute
+@ U+0151 ohungarumlaut = o + m.dblacute
+@ U+0154 Racute = R + m.acute
+@ U+0155 racute = r + m.acute
+@ U+0156 Rcommaaccent = R + m.commabelow@0
+@ U+0157 rcommaaccent = r + m.commabelow
+@ U+0158 Rcaron = R + m.caron
+@ U+0159 rcaron = r + m.caron
+@ U+015A Sacute = S + m.acute
+@ U+015B sacute = s + m.acute
+@ U+015C Scircumflex = S + m.circumflex
+@ U+015D scircumflex = s + m.circumflex
+@ U+015E Scedilla = S + m.cedilla
+@ U+015F scedilla = s + m.cedilla
+@ U+0160 Scaron = S + m.caron
+@ U+0161 scaron = s + m.caron
+@ U+0162 Tcedilla = T + m.cedilla
+@ U+0163 tcedilla = t + m.cedilla
+@ U+0164 Tcaron = T + m.caron
+@ U+0165 tcaron = t + m.caronside
+@ U+0168 Utilde = U + m.tilde
+@ U+0169 utilde = u + m.tilde
+@ U+016A Umacron = U + m.macron
+@ U+016B umacron = u + m.macron
+@ U+016C Ubreve = U + m.breve
+@ U+016D ubreve = u + m.breve
+@ U+016E Uring = U + m.ring
+@ U+016F uring = u + m.ring
+@ U+0170 Uhungarumlaut = U + m.dblacute
+@ U+0171 uhungarumlaut = u + m.dblacute
+@ U+0172 Uogonek = U + m.ogonek
+@ U+0173 uogonek = u + m.ogonek
+@ U+0174 Wcircumflex = W + m.circumflex
+@ U+0175 wcircumflex = w + m.circumflex
+@ U+0176 Ycircumflex = Y + m.circumflex
+@ U+0177 ycircumflex = y + m.circumflex
+@ U+0178 Ydieresis = Y + m.diaeresis
+@ U+0179 Zacute = Z + m.acute
+@ U+017A zacute = z + m.acute
+@ U+017B Zdotaccent = Z + m.dot
+@ U+017C zdotaccent = z + m.dot
+@ U+017D Zcaron = Z + m.caron
+@ U+017E zcaron = z + m.caron
+
+@ U+0218 Scommaaccent = S + m.commabelow
+@ U+0219 scommaaccent = s + m.commabelow
+@ U+021A Tcommaaccent = T + m.commabelow
+@ U+021B tcommaaccent = t + m.commabelow
+
+# spacing accents, standing at the cap line like ` and ^
+@ U+00A8 dieresis = m.diaeresis
+@ U+00AF macron = m.macron
+@ U+00B4 acute = m.acute
+@ U+00B8 cedilla = m.cedilla
+@ U+02C6 circumflex = m.circumflex
+@ U+02C7 caron = m.caron
+@ U+02D8 breve = m.breve
+@ U+02D9 dotaccent = m.dot
+@ U+02DA ring = m.ring
+@ U+02DB ogonek = m.ogonek
+@ U+02DC tilde = m.tilde
+@ U+02DD hungarumlaut = m.dblacute

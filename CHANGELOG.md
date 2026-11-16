@@ -9,6 +9,8 @@
 - The glyph source is split into several files in `glyphs/`.
 - `check.py` now verifies the full character list in both weights, that every non-space glyph has pixels and the spaces have the right widths, that no letter gains or loses a counter in Bold, and compares every pair of letters and digits in all scripts, with an explicit list of intended cross-script look-alikes (Latin A, Greek Α, Cyrillic А ...).
 - Specimen updated.
+- Hinted: every glyph carries a TrueType program that rounds each outline point to the pixel grid on both axes, and the gasp table allows grid-fitting, so the pixels stay sharp at sizes that are not multiples of 8px.
+- New `.otf` files for both weights: the same outlines as CFF, with PostScript hints from otfautohint. `build.py` needs `afdko` for them.
 
 ## License update — 2026-11-14
 

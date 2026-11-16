@@ -11,7 +11,7 @@ Version 1.100 (on this branch). The last public release is [v1.0.0](https://gith
 
 | Path | What it is |
 |---|---|
-| `fonts/` | Ready-to-use files: `AhmiPixel-Regular` and `AhmiPixel-Bold`, each as `.ttf` and `.woff2` |
+| `fonts/` | Ready-to-use files: `AhmiPixel-Regular` and `AhmiPixel-Bold`, each as `.ttf`, `.otf` and `.woff2`. The `.ttf` and `.woff2` are hinted so every pixel edge lands on the screen's pixel grid; the `.otf` carries PostScript hints |
 | `glyphs/` | The source. Every character drawn as a grid of `#` and `.`: `ahmi-pixel.txt` (Basic Latin, and the format), `latin.txt`, `marks.txt` (accents), `greek.txt`, `cyrillic.txt`, `symbols.txt` |
 | `build.py` | Turns the glyph files into the font files, composing accented letters from a base letter and a mark |
 | `check.py` | Fails if a required character is missing or any two characters could be mistaken for each other |
@@ -35,7 +35,7 @@ Version 1.100 (on this branch). The last public release is [v1.0.0](https://gith
 h1 { font: 700 64px/1.1 "Ahmi Pixel", sans-serif; }
 ```
 
-One font pixel is 1/8 of the font size (capitals are 7 pixels, the 8th row above them holds accents, and descenders hang 2 below). Line spacing is the same as in 1.000 (7 pixels up, 2 down, `USE_TYPO_METRICS` set), so accents above capitals can reach into the line above when lines are set tight; the Windows clipping box covers them. The letters are only pixel-sharp at sizes that are multiples of 8px: 16, 24, 32, 40, 48, 64 and so on. Other sizes work but look slightly soft.
+One font pixel is 1/8 of the font size (capitals are 7 pixels, the 8th row above them holds accents, and descenders hang 2 below). Line spacing is the same as in 1.000 (7 pixels up, 2 down, `USE_TYPO_METRICS` set), so accents above capitals can reach into the line above when lines are set tight; the Windows clipping box covers them. Every outline point is hinted to the screen's pixel grid, so the letters stay sharp at every size where the renderer applies hinting (Windows applies it vertically in browsers and fully in most desktop apps). At multiples of 8px (16, 24, 32, 40, 48, 64 and so on) every font pixel is the same size; at other sizes some font pixels come out one screen pixel larger than others.
 
 ## The two weights
 
@@ -65,7 +65,7 @@ The font is proportional, not monospaced.
 2. Run the checks, then rebuild:
 
 ```bash
-pip install fonttools brotli
+pip install fonttools brotli afdko
 python check.py
 python build.py
 ```

@@ -2,7 +2,7 @@
 """
 Build the Ahmi Pixel fonts from the glyph files in glyphs/.
 
-    python build.py            # writes fonts/AhmiPixel-{Regular,Bold}.{ttf,woff2}
+    python build.py            # writes fonts/AhmiPixel-{Regular,Bold}.{ttf,woff2,otf}
 
 Needs: pip install fonttools brotli
 
@@ -26,6 +26,8 @@ only usWinAscent/usWinDescent grow to cover every glyph.
 from __future__ import annotations
 
 import math
+import shutil
+import subprocess
 import sys
 from dataclasses import dataclass, field
 from functools import lru_cache
@@ -540,17 +542,99 @@ def build(weight: str) -> Path:
     fb.font["head"].fontRevision = float(VERSION)
 
     OUT.mkdir(exist_ok=True)
-    ttf = OUT / f"AhmiPixel-{style}.ttf"
+    stem = OUT / f"AhmiPixel-{style}"
+    otf = stem.with_suffix(".otf")
+    otf_from(fb.font, 2 * PX if is_bold else PX, PX).save(otf)
+    hinter = shutil.which("otfautohint")
+    if hinter is None:
+        raise SystemExit("otfautohint not found: pip install afdko")
+    subprocess.run([hinter, str(otf)], check=True, capture_output=True)
+
+    snap_to_pixels(fb.font)
+    ttf = stem.with_suffix(".ttf")
     fb.font.save(ttf)
     fb.font.flavor = "woff2"
     fb.font.save(ttf.with_suffix(".woff2"))
     return ttf
 
 
+def snap_to_pixels(font) -> None:
+    """Hint every glyph so each outline point rounds to the device pixel grid
+    on both axes: the pixels stay sharp at every size, not only multiples of 8px."""
+    from fontTools.ttLib import newTable
+    from fontTools.ttLib.tables.ttProgram import Program
+
+    glyf = font["glyf"]
+    most_points, most_bytes = 0, 0
+    for name in font.getGlyphOrder():
+        g = glyf[name]
+        n = g.numberOfContours and len(g.coordinates)
+        if not n:
+            continue
+        points = " ".join(str(i) for i in range(n))
+        asm = []
+        for axis in ("SVTCA[1]", "SVTCA[0]"):
+            asm += [axis, f"PUSH[ ] {points}"] + ["MDAP[1]"] * n
+        program = Program()
+        program.fromAssembly(asm)
+        g.program = program
+        most_points = max(most_points, n)
+        most_bytes = max(most_bytes, len(program.getBytecode()))
+    maxp = font["maxp"]
+    maxp.maxStackElements = max(maxp.maxStackElements, most_points)
+    maxp.maxSizeOfInstructions = max(maxp.maxSizeOfInstructions, most_bytes)
+    gasp = newTable("gasp")
+    gasp.version = 1
+    gasp.gaspRange = {0xFFFF: 0x000F}
+    font["gasp"] = gasp
+
+
+def otf_from(font, vstem: int, hstem: int):
+    """A CFF (.otf) copy of the built TrueType font: same glyphs, metrics, names and cmap."""
+    import io
+
+    from fontTools.fontBuilder import FontBuilder
+    from fontTools.pens.reverseContourPen import ReverseContourPen
+    from fontTools.pens.t2CharStringPen import T2CharStringPen
+    from fontTools.ttLib import TTFont
+
+    buf = io.BytesIO()
+    font.save(buf)
+    buf.seek(0)
+    f = TTFont(buf)
+    glyphs = f.getGlyphSet()
+    widths = f["hmtx"].metrics
+    charstrings = {}
+    for name in f.getGlyphOrder():
+        pen = T2CharStringPen(widths[name][0], glyphs)
+        glyphs[name].draw(ReverseContourPen(pen))
+        charstrings[name] = pen.getCharString()
+    cap, xh, desc = CAP_ROWS * PX, 5 * PX, -DESC_ROWS * PX
+    del f["glyf"], f["loca"]
+    f.sfntVersion = "OTTO"
+    fb = FontBuilder(font=f)
+    names = f["name"]
+    fb.setupCFF(
+        names.getDebugName(6),
+        {
+            "FullName": names.getDebugName(4),
+            "FamilyName": names.getDebugName(1),
+            "Weight": names.getDebugName(2),
+            "version": VERSION,
+            "Notice": "Copyright 2026 Ahmi Darrow",
+        },
+        charstrings,
+        {"BlueValues": [0, 0, xh, xh, cap, cap], "OtherBlues": [desc, desc], "StdHW": hstem, "StdVW": vstem},
+    )
+    fb.setupMaxp()
+    f["post"].formatType = 3.0
+    return f
+
+
 def main() -> int:
     for weight in ("regular", "bold"):
         path = build(weight)
-        print(f"built {path.relative_to(ROOT)} and .woff2 ({len(bitmaps(weight))} characters)")
+        print(f"built {path.relative_to(ROOT)}, .woff2 and .otf ({len(bitmaps(weight))} characters)")
     return 0
 
 

@@ -35,7 +35,7 @@ Version 1.100 (on this branch). The last public release is [v1.0.0](https://gith
 h1 { font: 700 64px/1.1 "Ahmi Pixel", sans-serif; }
 ```
 
-One font pixel is 1/8 of the font size (capitals are 7 pixels, the 8th row above them holds accents, and descenders hang 2 below), so the letters are only pixel-sharp at sizes that are multiples of 8px: 16, 24, 32, 40, 48, 64 and so on. Other sizes work but look slightly soft.
+One font pixel is 1/8 of the font size (capitals are 7 pixels, the 8th row above them holds accents, and descenders hang 2 below). Line spacing is the same as in 1.000 (7 pixels up, 2 down, `USE_TYPO_METRICS` set), so accents above capitals can reach into the line above when lines are set tight; the Windows clipping box covers them. The letters are only pixel-sharp at sizes that are multiples of 8px: 16, 24, 32, 40, 48, 64 and so on. Other sizes work but look slightly soft.
 
 ## The two weights
 

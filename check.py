@@ -10,6 +10,9 @@ character is missing or could be mistaken for another one, in either weight:
   1. Coverage: every character in TARGET (below) is drawn, in Regular and
      Bold, and the built font files in fonts/ (if present) map all of them
      and carry the current version.
+     Their line metrics keep the 1.000 values (hhea and OS/2 typo ascender
+     896, descender -256, line gap 0, USE_TYPO_METRICS set) and
+     usWinAscent/usWinDescent cover every glyph's ink.
   2. Ink: every character has pixels except the spaces, which have none and
      the right widths (figure space = a digit, punctuation space = a period).
   3. Counters: the letters and digits in HOLES have the number of closed
@@ -32,7 +35,7 @@ import sys
 import unicodedata
 from itertools import combinations
 
-from build import OUT, VERSION, advance, bitmaps, composition, embolden
+from build import OUT, PX, ROWS, DESC_ROWS, VERSION, advance, bitmaps, composition, embolden
 
 # ---------------------------------------------------------------- coverage
 
@@ -192,6 +195,27 @@ def check_files(failures: list[str]) -> None:
             missing = TARGET - set(font.getBestCmap())
             if missing:
                 failures.append(f"{path.name} lacks {len(missing)} characters: run build.py")
+            hhea, os2 = font["hhea"], font["OS/2"]
+            line = {
+                "hhea ascender": (hhea.ascent, 896), "hhea descender": (hhea.descent, -256),
+                "hhea lineGap": (hhea.lineGap, 0), "sTypoAscender": (os2.sTypoAscender, 896),
+                "sTypoDescender": (os2.sTypoDescender, -256), "sTypoLineGap": (os2.sTypoLineGap, 0),
+            }
+            for what, (got, want) in line.items():
+                if got != want:
+                    failures.append(f"{path.name}: {what} is {got}, 1.000 had {want}")
+            if os2.version < 4 or not os2.fsSelection & 0x80:
+                failures.append(f"{path.name}: USE_TYPO_METRICS is not set")
+            gs = font.getGlyphSet()
+            from fontTools.pens.boundsPen import BoundsPen
+            hi, lo = 0, 0
+            for name in font.getGlyphOrder():
+                pen = BoundsPen(gs)
+                gs[name].draw(pen)
+                if pen.bounds:
+                    hi, lo = max(hi, pen.bounds[3]), min(lo, pen.bounds[1])
+            if os2.usWinAscent < hi or os2.usWinDescent < -lo:
+                failures.append(f"{path.name}: usWin {os2.usWinAscent}/{os2.usWinDescent} does not cover glyphs reaching {hi}/{lo}")
             version = font["name"].getDebugName(5)
             if version != f"Version {VERSION}":
                 failures.append(f"{path.name} says {version!r}, build.py says {VERSION}: run build.py")

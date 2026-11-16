@@ -19,7 +19,9 @@ builds the glyph from the base letter and a mark that is drawn once (see
 
 Metrics: one font pixel is 1/8 of the em, so text is pixel-sharp at any size
 that is a multiple of 8px (16, 24, 32, 40, 48, 64 ...). Capitals are 7 pixels
-tall; the 8th row of the em, above the capitals, holds accents.
+tall; the 8th row of the em, above the capitals, holds accents. Line spacing
+(hhea, OS/2 typo, USE_TYPO_METRICS) is kept as in 1.000: 7 pixels up, 2 down;
+only usWinAscent/usWinDescent grow to cover every glyph.
 """
 from __future__ import annotations
 
@@ -443,6 +445,23 @@ def outline(grid: Bitmap) -> list[list[tuple[int, int]]]:
     return contours
 
 
+LINE_ASCENT = CAP_ROWS * PX      # 896, as in 1.000
+LINE_DESCENT = DESC_ROWS * PX    # 256, as in 1.000
+LINE_GAP = 0
+USE_TYPO_METRICS = 0x80
+
+
+def win_bounds(weight: str) -> tuple[int, int]:
+    """usWinAscent/usWinDescent: the highest and lowest ink of any glyph."""
+    top, bottom = 0, 0
+    for _, grid in bitmaps(weight).values():
+        for r, row in enumerate(grid):
+            if "#" in row:
+                y = ROWS - DESC_ROWS - 1 - r      # pixel row, 0 = just above baseline
+                top, bottom = max(top, (y + 1) * PX), max(bottom, -y * PX)
+    return top, bottom
+
+
 def build(weight: str) -> Path:
     from fontTools.fontBuilder import FontBuilder
     from fontTools.pens.ttGlyphPen import TTGlyphPen
@@ -478,13 +497,18 @@ def build(weight: str) -> Path:
         cmap[cp] = name
         add(name, grid, advance(weight, cp))
 
-    ascent, descent = (TOP_ROWS + CAP_ROWS) * PX, DESC_ROWS * PX
+    # Line spacing stays as in 1.000 (hhea and typo: 7 rows up, 2 down, no
+    # gap; USE_TYPO_METRICS on). Only the Windows clipping box grows to the
+    # real bounds of every glyph, so accents in the 8th row are never cut
+    # off; in tightly set lines they may reach into the line above.
+    ascent, descent = LINE_ASCENT, LINE_DESCENT
+    win_ascent, win_descent = win_bounds(weight)
     fb = FontBuilder(UPM, isTTF=True)
     fb.setupGlyphOrder(order)
     fb.setupCharacterMap(cmap)
     fb.setupGlyf(glyphs)
     fb.setupHorizontalMetrics(metrics)
-    fb.setupHorizontalHeader(ascent=ascent, descent=-descent, lineGap=0)
+    fb.setupHorizontalHeader(ascent=ascent, descent=-descent, lineGap=LINE_GAP)
     fb.setupNameTable(
         {
             "familyName": FAMILY,
@@ -499,15 +523,16 @@ def build(weight: str) -> Path:
         }
     )
     fb.setupOS2(
+        version=4,
         sTypoAscender=ascent,
         sTypoDescender=-descent,
-        sTypoLineGap=0,
-        usWinAscent=ascent,
-        usWinDescent=descent,
+        sTypoLineGap=LINE_GAP,
+        usWinAscent=win_ascent,
+        usWinDescent=win_descent,
         sxHeight=5 * PX,
         sCapHeight=CAP_ROWS * PX,
         usWeightClass=700 if is_bold else 400,
-        fsSelection=0x20 if is_bold else 0x40,
+        fsSelection=(0x20 if is_bold else 0x40) | USE_TYPO_METRICS,
         achVendID="AHMI",
     )
     fb.setupPost(isFixedPitch=0)

@@ -11,6 +11,37 @@
 # "@bold U+0030 zero" redraws one glyph by hand for Bold where that
 # automatic thickening would close up a counter.
 #
+# More glyphs live in the other files in this folder (latin.txt, marks.txt,
+# greek.txt, cyrillic.txt, symbols.txt); build.py reads them all.
+#
+# Header options:
+#   "^1"          the first row is drawn one row ABOVE the cap line (the 8th
+#                 row of the em, kept for accents).
+#   "advance=N"   the glyph advances N pixels instead of its width plus one
+#                 (spaces: "@ U+2009 thinspace advance=2" with a "." row);
+#                 "advance=zero" copies the advance of the glyph named zero.
+#
+# Composed glyphs. A header with "= base + mark" and no rows is built from
+# other glyphs, so every accent is drawn once:
+#   "@ U+00E9 eacute = e + m.acute"
+#   "@ U+0391 Alpha = A"          (same drawing as Latin A, see check.py)
+# Marks are parts ("@part m.acute above") and are not characters themselves.
+# Their kind says where they go:
+#   above   centred over the base with one empty row between. Over a
+#           lowercase letter that fits; over a capital there is only the
+#           8th row, so the capital is shortened: a part "<base>.<rows>" if
+#           one is drawn (e.g. "@part G.5"), otherwise build.py drops one of
+#           its repeated rows (the straight run of a stem or side). A mark
+#           named "<mark>.cap" is used over capitals when it exists.
+#   below   hangs from the middle of the base's bottom row (cedilla, comma).
+#   ogonek  hangs from the right end of the base's bottom row.
+#   side    sits right of the base at the cap line (the Czech/Slovak ď ľ ť).
+#   tonos   sits left of a Greek capital, which moves right to make room.
+# A mark may be drawn more than once with different widths; the one whose
+# width has the same parity as the base is used, so it centres exactly.
+# "name@N" puts a mark's left edge in column N of the base instead.
+# A mark never touches its base (build.py stops with an error if it would).
+#
 # House rules (check.py enforces them):
 #   - C, c, G, S, s, e, 2, 3, 5 keep an open side at least 2 pixels tall.
 #   - a closed counter stays closed, an open one stays open, in both weights.

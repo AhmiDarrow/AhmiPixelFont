@@ -1,0 +1,369 @@
+# Ahmi Pixel — modern (monotonic) Greek
+#
+# Letters that look the same as Latin ones reuse the Latin drawing
+# ("@ U+0391 Alpha = A"); check.py lists these as intended look-alikes.
+# Capitals take the tonos at their top left, as Greek type does, so they
+# keep their full height.
+
+# ---------------------------------------------------------------- capitals
+
+@ U+0391 Alpha = A
+@ U+0392 Beta = B
+
+@ U+0393 Gamma
+#####
+#....
+#....
+#....
+#....
+#....
+#....
+
+@ U+0394 Delta
+..#..
+.#.#.
+.#.#.
+#...#
+#...#
+#...#
+#####
+
+@ U+0395 Epsilon = E
+@ U+0396 Zeta = Z
+@ U+0397 Eta = H
+
+@ U+0398 Theta
+.#####.
+#.....#
+#.....#
+#######
+#.....#
+#.....#
+.#####.
+
+@ U+0399 Iota = I
+@ U+039A Kappa = K
+
+@ U+039B Lambda
+..#..
+..#..
+.#.#.
+.#.#.
+#...#
+#...#
+#...#
+
+@ U+039C Mu = M
+@ U+039D Nu = N
+
+@ U+039E Xi
+#####
+.....
+.....
+.###.
+.....
+.....
+#####
+
+@ U+039F Omicron = O
+
+@ U+03A0 Pi
+######
+#....#
+#....#
+#....#
+#....#
+#....#
+#....#
+
+@ U+03A1 Rho = P
+
+@ U+03A3 Sigma
+#####
+#....
+.#...
+..#..
+.#...
+#....
+#####
+
+@ U+03A4 Tau = T
+@ U+03A5 Upsilon = Y
+
+@ U+03A6 Phi
+...#...
+.#####.
+#..#..#
+#..#..#
+.#####.
+...#...
+...#...
+
+@ U+03A7 Chi = X
+
+@ U+03A8 Psi
+#..#..#
+#..#..#
+#..#..#
+.#####.
+...#...
+...#...
+...#...
+
+@ U+03A9 Omega
+.####.
+#....#
+#....#
+#....#
+.#..#.
+.#..#.
+##..##
+
+@ U+0386 Alphatonos = A + m.tonos
+@ U+0388 Epsilontonos = E + m.tonos
+@ U+0389 Etatonos = H + m.tonos
+@ U+038A Iotatonos = I + m.tonos
+@ U+038C Omicrontonos = O + m.tonos
+@ U+038E Upsilontonos = Y + m.tonos
+@ U+038F Omegatonos = Omega + m.tonos
+@ U+03AA Iotadieresis = I + m.diaeresis
+@ U+03AB Upsilondieresis = Y + m.diaeresis
+
+# ---------------------------------------------------------------- lowercase
+
+@ U+03B1 alpha
+.....
+.....
+.##.#
+#..##
+#..#.
+#..##
+.##.#
+
+@ U+03B2 beta
+.##.
+#..#
+#..#
+###.
+#..#
+#..#
+###.
+#...
+#...
+
+@ U+03B3 gamma
+.....
+.....
+#...#
+.#.#.
+.#.#.
+..#..
+..#..
+..#..
+..#..
+
+@ U+03B4 delta
+.###.
+#....
+.##..
+#..#.
+#...#
+#...#
+.###.
+
+@ U+03B5 epsilon
+....
+....
+.###
+#...
+.##.
+#...
+.###
+
+@ U+03B6 zeta
+#####
+...#.
+..#..
+.#...
+#....
+#....
+.###.
+....#
+..##.
+
+@ U+03B7 eta
+.....
+.....
+####.
+#...#
+#...#
+#...#
+#...#
+....#
+....#
+
+@ U+03B8 theta
+.##.
+#..#
+#..#
+####
+#..#
+#..#
+.##.
+
+@ U+03B9 iota
+...
+...
+#..
+#..
+#..
+#..
+.##
+
+@ U+03BA kappa = kgreenlandic
+
+@ U+03BB lambda
+##...
+..#..
+..#..
+.#.#.
+.#.#.
+#...#
+#...#
+
+@ U+03BC mugreek
+.....
+.....
+#...#
+#...#
+#...#
+#..##
+###.#
+#....
+#....
+
+@ U+03BD nu = v
+
+@ U+03BE xi
+####.
+.#...
+..##.
+.#...
+#....
+#....
+.###.
+....#
+..##.
+
+@ U+03BF omicron = o
+
+@ U+03C0 pi
+......
+......
+######
+.#..#.
+.#..#.
+.#..#.
+.#..#.
+
+@ U+03C1 rho
+.....
+.....
+.###.
+#...#
+#...#
+##..#
+#.##.
+#....
+.##..
+
+@ U+03C2 sigma1
+....
+....
+.###
+#...
+#...
+.##.
+...#
+..#.
+
+@ U+03C3 sigma
+.....
+.....
+.####
+#..#.
+#...#
+#...#
+.###.
+
+@ U+03C4 tau
+.....
+.....
+#####
+..#..
+..#..
+..#..
+...##
+
+@ U+03C5 upsilon
+....
+....
+#..#
+#..#
+#..#
+#..#
+.##.
+
+@ U+03C6 phi
+.......
+...#...
+.#####.
+#..#..#
+#..#..#
+#..#..#
+.#####.
+...#...
+...#...
+
+@ U+03C7 chi
+.....
+.....
+#...#
+#...#
+.#.#.
+..#..
+.#.#.
+#...#
+#...#
+
+@ U+03C8 psi
+.......
+...#...
+#..#..#
+#..#..#
+#..#..#
+#..#..#
+.#####.
+...#...
+...#...
+
+@ U+03C9 omega
+.......
+.......
+.#...#.
+#.....#
+#..#..#
+#..#..#
+.##.##.
+
+@ U+03AC alphatonos = alpha + m.acute
+@ U+03AD epsilontonos = epsilon + m.acute
+@ U+03AE etatonos = eta + m.acute
+@ U+03AF iotatonos = iota + m.acute@-2
+@ U+03CA iotadieresis = iota + m.diaeresis
+@ U+03CB upsilondieresis = upsilon + m.diaeresis
+@ U+0390 iotadieresistonos = iota + m.dialytikatonos
+@ U+03B0 upsilondieresistonos = upsilon + m.dialytikatonos
+@ U+03CC omicrontonos = o + m.acute
+@ U+03CD upsilontonos = upsilon + m.acute@-2
+@ U+03CE omegatonos = omega + m.acute

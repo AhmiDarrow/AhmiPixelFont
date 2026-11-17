@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- The fonts now allow installable embedding (OS/2 `fsType` 0). Earlier builds carried fontTools' default of 4, "preview and print only", which is wrong for an OFL font that apps bundle and embed. Nothing else in the files changed. `check.py` now checks `fsType`.
+
 ## 1.100 — 2026-11-16 (release v1.1.0)
 
 - 583 characters per weight (was 109): all of Latin-1 and Latin Extended-A, Romanian Ș ș Ț ț and ƒ, spacing accents, modern Greek, Cyrillic for Russian, Ukrainian, Belarusian, Bulgarian, Serbian, Macedonian, Kazakh and Central Asian languages, general punctuation and spaces, currency signs, ™ №, arrows, maths, and the shapes the egui toolkit draws.

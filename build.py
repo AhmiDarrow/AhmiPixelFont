@@ -536,6 +536,9 @@ def build(weight: str) -> Path:
         usWeightClass=700 if is_bold else 400,
         fsSelection=(0x20 if is_bold else 0x40) | USE_TYPO_METRICS,
         achVendID="AHMI",
+        # Installable embedding. fontTools defaults to 4 (preview and print only), which is
+        # wrong for an OFL font that apps bundle and embed.
+        fsType=0,
     )
     fb.setupPost(isFixedPitch=0)
     fb.font["head"].macStyle = 1 if is_bold else 0

@@ -206,6 +206,8 @@ def check_files(failures: list[str]) -> None:
                     failures.append(f"{path.name}: {what} is {got}, 1.000 had {want}")
             if os2.version < 4 or not os2.fsSelection & 0x80:
                 failures.append(f"{path.name}: USE_TYPO_METRICS is not set")
+            if os2.fsType != 0:
+                failures.append(f"{path.name}: fsType is {os2.fsType}, should be 0 (installable embedding)")
             gs = font.getGlyphSet()
             from fontTools.pens.boundsPen import BoundsPen
             hi, lo = 0, 0

@@ -2,13 +2,17 @@
 """
 Build the Ahmi Pixel fonts from the glyph files in glyphs/.
 
-    python build.py            # writes fonts/AhmiPixel-{Regular,Bold}.{ttf,woff2,otf}
+    python build.py            # writes fonts/AhmiPixel-{Light,Semilight,Regular,Semibold,Bold}.{ttf,woff2,otf}
 
-Needs: pip install fonttools brotli
+Needs: pip install fonttools brotli afdko
 
 The glyph files are the only source. Regular is exactly the drawn pixels.
 Bold thickens every pixel one step to the right (2px stems, 1px bars) unless
-a glyph file gives a hand-drawn "@bold" version.
+a glyph file gives a hand-drawn "@bold" version. Light, Semilight and
+Semibold draw Regular's pixels with every horizontal run of ink ending at a
+fraction of a pixel, so vertical stems are 0.6, 0.8 and 1.5 pixels wide while
+bars stay one pixel tall. They are pixel-sharp from 2x upward (16px and up);
+at 1x the hinting rounds them to whole pixels.
 
 Accented letters are not drawn out: a line such as
 
@@ -38,7 +42,7 @@ GLYPHS = ROOT / "glyphs"
 OUT = ROOT / "fonts"
 
 FAMILY = "Ahmi Pixel"
-VERSION = "1.100"
+VERSION = "1.200"
 UPM = 1024
 PX = 128          # one drawn pixel, in font units (8 pixels per em)
 TOP_ROWS = 1      # the row above the capitals, inside the em, for accents
@@ -50,6 +54,35 @@ XTOP = CAP + 2                    # grid row of the x-height (top of 'x')
 BASELINE = CAP + CAP_ROWS - 1     # last grid row that stands on the baseline
 
 MARK_KINDS = ("above", "below", "ogonek", "side", "tonos")
+
+
+@dataclass(frozen=True)
+class Style:
+    """One weight of the family."""
+
+    name: str          # style name: Light, Semilight, Regular, Semibold, Bold
+    grids: str         # which pixel grids it draws: "regular" or "bold"
+    stem: float        # width of a one-pixel-wide stem, in pixels
+    weight_class: int
+
+    @property
+    def ribbi(self) -> bool:
+        return self.name in ("Regular", "Bold")
+
+    @property
+    def extra(self) -> float:
+        """How far every run of ink reaches past (or short of) its last pixel."""
+        return 0.0 if self.grids == "bold" else self.stem - 1.0
+
+
+STYLES = [
+    Style("Light", "regular", 0.6, 300),
+    Style("Semilight", "regular", 0.8, 350),
+    Style("Regular", "regular", 1.0, 400),
+    Style("Semibold", "regular", 1.5, 600),
+    Style("Bold", "bold", 2.0, 700),
+]
+SUB = 10          # fractional weights are traced on a grid of tenths of a pixel
 
 Bitmap = list[str]
 
@@ -390,6 +423,49 @@ def advance(weight: str, cp: int) -> int:
     return advance(weight, other[0])
 
 
+def _inked(weight: str, cp: int) -> bool:
+    return any("#" in r for r in _bitmaps(weight)[cp][1])
+
+
+def style_advance(st: Style, cp: int) -> float:
+    """Advance in pixels for one style. A Semibold glyph with ink grows by its
+    extra half pixel, so the white between letters stays one pixel, as in Bold;
+    lighter weights keep Regular's advance so text stays on the pixel grid.
+    Spaces keep their width; a space that copies a glyph's advance (the figure
+    space) copies it in this style."""
+    adv = advance(st.grids, cp)
+    if st.extra <= 0:
+        return adv
+    ref = _bitmaps(st.grids)[cp][2]
+    if ref is not None and not ref.isdigit():
+        glyphs, _, _, _ = parse()
+        cp = next(c for c, e in glyphs.items() if e.name == ref)
+    return adv + st.extra if _inked(st.grids, cp) else adv
+
+
+def widen_runs(grid: Bitmap, extra: float) -> Bitmap:
+    """The grid at SUB columns per pixel, with every horizontal run of ink
+    ending `extra` pixels past its last pixel (short of it when negative)."""
+    shift = round(extra * SUB)
+    width = len(grid[0]) * SUB + max(shift, 0)
+    out = []
+    for row in grid:
+        fine = ["."] * width
+        x = 0
+        while x < len(row):
+            if row[x] != "#":
+                x += 1
+                continue
+            end = x
+            while end < len(row) and row[end] == "#":
+                end += 1
+            for fx in range(x * SUB, end * SUB + shift):
+                fine[fx] = "#"
+            x = end
+        out.append("".join(fine))
+    return out
+
+
 # ---------------------------------------------------------------- outlines
 
 def outline(grid: Bitmap) -> list[list[tuple[int, int]]]:
@@ -464,40 +540,46 @@ def win_bounds(weight: str) -> tuple[int, int]:
     return top, bottom
 
 
-def build(weight: str) -> Path:
+def build(st: Style) -> Path:
     from fontTools.fontBuilder import FontBuilder
     from fontTools.pens.ttGlyphPen import TTGlyphPen
 
-    is_bold = weight == "bold"
-    style = "Bold" if is_bold else "Regular"
+    is_bold = st.name == "Bold"
+    style = st.name
+    weight = st.grids
     grids = bitmaps(weight)
+    fractional = st.extra != 0
 
     order = [".notdef"]
     cmap: dict[int, str] = {}
     glyphs = {}
     metrics = {}
 
-    def add(name: str, grid: Bitmap, adv: int) -> None:
+    def add(name: str, grid: Bitmap, adv: float) -> None:
         pen = TTGlyphPen(None)
         xs = []
-        for contour in outline(grid):
-            pts = [(x * PX, y * PX) for x, y in contour]
+        if fractional:
+            contours, x_unit = outline(widen_runs(grid, st.extra)), PX / SUB
+        else:
+            contours, x_unit = outline(grid), PX
+        for contour in contours:
+            pts = [(round(x * x_unit), y * PX) for x, y in contour]
             xs += [p[0] for p in pts]
             pen.moveTo(pts[0])
             for p in pts[1:]:
                 pen.lineTo(p)
             pen.closePath()
         glyphs[name] = pen.glyph()
-        metrics[name] = (adv * PX, min(xs) if xs else 0)
+        metrics[name] = (round(adv * PX), min(xs) if xs else 0)
 
     box = ["....."] * CAP + ["#####"] + ["#...#"] * 5 + ["#####"] + ["....."] * DESC_ROWS
     box = embolden(box) if is_bold else box
-    add(".notdef", box, len(box[0]) + 1)
+    add(".notdef", box, len(box[0]) + 1 + max(st.extra, 0))
     for cp in sorted(grids):
         name, grid = grids[cp]
         order.append(name)
         cmap[cp] = name
-        add(name, grid, advance(weight, cp))
+        add(name, grid, style_advance(st, cp))
 
     # Line spacing stays as in 1.000 (hhea and typo: 7 rows up, 2 down, no
     # gap; USE_TYPO_METRICS on). Only the Windows clipping box grows to the
@@ -511,19 +593,30 @@ def build(weight: str) -> Path:
     fb.setupGlyf(glyphs)
     fb.setupHorizontalMetrics(metrics)
     fb.setupHorizontalHeader(ascent=ascent, descent=-descent, lineGap=LINE_GAP)
-    fb.setupNameTable(
-        {
-            "familyName": FAMILY,
-            "styleName": style,
-            "uniqueFontIdentifier": f"{FAMILY} {style} {VERSION}",
-            "fullName": f"{FAMILY} {style}" if is_bold else FAMILY,
-            "psName": f"AhmiPixel-{style}",
-            "version": f"Version {VERSION}",
-            "copyright": "Copyright 2026 Ahmi Darrow",
-            "designer": "Ahmi Darrow",
-            "designerURL": "https://github.com/AhmiDarrow",
-        }
-    )
+    # Regular and Bold are one style-linked family. The other weights are
+    # families of their own for old apps, and all five share the typographic
+    # family name.
+    if st.ribbi:
+        family, subfamily = FAMILY, style
+        full = FAMILY if style == "Regular" else f"{FAMILY} {style}"
+    else:
+        family, subfamily = f"{FAMILY} {style}", "Regular"
+        full = f"{FAMILY} {style}"
+    names = {
+        "familyName": family,
+        "styleName": subfamily,
+        "uniqueFontIdentifier": f"{FAMILY} {style} {VERSION}",
+        "fullName": full,
+        "psName": f"AhmiPixel-{style}",
+        "version": f"Version {VERSION}",
+        "copyright": "Copyright 2026 Ahmi Darrow",
+        "designer": "Ahmi Darrow",
+        "designerURL": "https://github.com/AhmiDarrow",
+    }
+    if not st.ribbi:
+        names["typographicFamily"] = FAMILY
+        names["typographicSubfamily"] = style
+    fb.setupNameTable(names)
     fb.setupOS2(
         version=4,
         sTypoAscender=ascent,
@@ -533,7 +626,7 @@ def build(weight: str) -> Path:
         usWinDescent=win_descent,
         sxHeight=5 * PX,
         sCapHeight=CAP_ROWS * PX,
-        usWeightClass=700 if is_bold else 400,
+        usWeightClass=st.weight_class,
         fsSelection=(0x20 if is_bold else 0x40) | USE_TYPO_METRICS,
         achVendID="AHMI",
         # Installable embedding. fontTools defaults to 4 (preview and print only), which is
@@ -547,7 +640,7 @@ def build(weight: str) -> Path:
     OUT.mkdir(exist_ok=True)
     stem = OUT / f"AhmiPixel-{style}"
     otf = stem.with_suffix(".otf")
-    otf_from(fb.font, 2 * PX if is_bold else PX, PX).save(otf)
+    otf_from(fb.font, round(st.stem * PX), PX).save(otf)
     hinter = shutil.which("otfautohint")
     if hinter is None:
         raise SystemExit("otfautohint not found: pip install afdko")
@@ -635,9 +728,12 @@ def otf_from(font, vstem: int, hstem: int):
 
 
 def main() -> int:
-    for weight in ("regular", "bold"):
-        path = build(weight)
-        print(f"built {path.relative_to(ROOT)}, .woff2 and .otf ({len(bitmaps(weight))} characters)")
+    for st in STYLES:
+        path = build(st)
+        print(
+            f"built {path.relative_to(ROOT)}, .woff2 and .otf "
+            f"({len(bitmaps(st.grids))} characters, stem {st.stem}px)"
+        )
     return 0
 
 

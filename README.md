@@ -1,9 +1,9 @@
 # Ahmi Pixel
 
-An 8-bit style typeface in two weights, drawn for [Ahmi Darrow's site](https://r20ohhka.rf.gd/).
+An 8-bit style typeface in five weights, drawn for [Ahmi Darrow's site](https://r20ohhka.rf.gd/).
 It was made because the pixel font the site used before had a capital C that read as an O and a 5 that read as an S. In Ahmi Pixel every look-alike pair is checked by a script before the fonts are built.
 
-Version 1.100. The latest release is [v1.1.0](https://github.com/AhmiDarrow/AhmiPixelFont/releases/tag/v1.1.0) (font version 1.100).
+Version 1.200. The latest release is [v1.1.0](https://github.com/AhmiDarrow/AhmiPixelFont/releases/tag/v1.1.0) (font version 1.100).
 
 ![Ahmi Pixel specimen](specimen.png)
 
@@ -11,7 +11,7 @@ Version 1.100. The latest release is [v1.1.0](https://github.com/AhmiDarrow/Ahmi
 
 | Path | What it is |
 |---|---|
-| `fonts/` | Ready-to-use files: `AhmiPixel-Regular` and `AhmiPixel-Bold`, each as `.ttf`, `.otf` and `.woff2`. The `.ttf` and `.woff2` are hinted so every pixel edge lands on the screen's pixel grid; the `.otf` carries PostScript hints |
+| `fonts/` | Ready-to-use files: `AhmiPixel-Light`, `-Semilight`, `-Regular`, `-Semibold` and `-Bold`, each as `.ttf`, `.otf` and `.woff2`. The `.ttf` and `.woff2` are hinted so every pixel edge lands on the screen's pixel grid; the `.otf` carries PostScript hints |
 | `glyphs/` | The source. Every character drawn as a grid of `#` and `.`: `ahmi-pixel.txt` (Basic Latin, and the format), `latin.txt`, `marks.txt` (accents), `greek.txt`, `cyrillic.txt`, `symbols.txt` |
 | `build.py` | Turns the glyph files into the font files, composing accented letters from a base letter and a mark |
 | `check.py` | Fails if a required character is missing or any two characters could be mistaken for each other |
@@ -24,8 +24,23 @@ Version 1.100. The latest release is [v1.1.0](https://github.com/AhmiDarrow/Ahmi
 ```css
 @font-face {
   font-family: "Ahmi Pixel";
+  src: url("fonts/AhmiPixel-Light.woff2") format("woff2");
+  font-weight: 300;
+}
+@font-face {
+  font-family: "Ahmi Pixel";
+  src: url("fonts/AhmiPixel-Semilight.woff2") format("woff2");
+  font-weight: 350;
+}
+@font-face {
+  font-family: "Ahmi Pixel";
   src: url("fonts/AhmiPixel-Regular.woff2") format("woff2");
   font-weight: 400;
+}
+@font-face {
+  font-family: "Ahmi Pixel";
+  src: url("fonts/AhmiPixel-Semibold.woff2") format("woff2");
+  font-weight: 600;
 }
 @font-face {
   font-family: "Ahmi Pixel";
@@ -37,10 +52,11 @@ h1 { font: 700 64px/1.1 "Ahmi Pixel", sans-serif; }
 
 One font pixel is 1/8 of the font size (capitals are 7 pixels, the 8th row above them holds accents, and descenders hang 2 below). Line spacing is the same as in 1.000 (7 pixels up, 2 down, `USE_TYPO_METRICS` set), so accents above capitals can reach into the line above when lines are set tight; the Windows clipping box covers them. Every outline point is hinted to the screen's pixel grid, so the letters stay sharp at every size where the renderer applies hinting (Windows applies it vertically in browsers and fully in most desktop apps). At multiples of 8px (16, 24, 32, 40, 48, 64 and so on) every font pixel is the same size; at other sizes some font pixels come out one screen pixel larger than others.
 
-## The two weights
+## The five weights
 
 - **Regular** is exactly the pixels in the glyph file: 1-pixel strokes, capitals 7 pixels tall, lowercase 5.
 - **Bold** thickens every pixel one step to the right, giving 2-pixel stems and 1-pixel bars, the look of arcade and console lettering. Where that would close up a counter, the glyph file carries a hand-drawn bold version (currently only the zero).
+- **Light**, **Semilight** and **Semibold** draw Regular's pixels with every horizontal run of ink ending at a fraction of a pixel: stems are 0.6, 0.8 and 1.5 pixels wide while bars stay one pixel tall. They are sharp from 16px up (16, 24, 32 ...), where a font pixel covers two or more screen pixels; at 8px the hinting rounds them to whole pixels, so there Light and Semilight look like Regular and Semibold like Bold. Semibold glyphs are half a pixel wider, so the gap between letters stays one pixel.
 
 ## Characters
 

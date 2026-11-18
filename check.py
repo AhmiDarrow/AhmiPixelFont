@@ -35,7 +35,7 @@ import sys
 import unicodedata
 from itertools import combinations
 
-from build import OUT, PX, ROWS, DESC_ROWS, VERSION, advance, bitmaps, composition, embolden
+from build import FAMILY, OUT, PX, ROWS, DESC_ROWS, STYLES, VERSION, advance, bitmaps, composition, embolden
 
 # ---------------------------------------------------------------- coverage
 
@@ -185,8 +185,9 @@ def check_files(failures: list[str]) -> None:
     except ImportError:
         print("fontTools not installed: built files not checked")
         return
-    for style in ("Regular", "Bold"):
-        for ext in ("ttf", "woff2"):
+    for st in STYLES:
+        style = st.name
+        for ext in ("ttf", "woff2", "otf"):
             path = OUT / f"AhmiPixel-{style}.{ext}"
             if not path.exists():
                 failures.append(f"{path.name} is missing: run build.py")
@@ -218,6 +219,17 @@ def check_files(failures: list[str]) -> None:
                     hi, lo = max(hi, pen.bounds[3]), min(lo, pen.bounds[1])
             if os2.usWinAscent < hi or os2.usWinDescent < -lo:
                 failures.append(f"{path.name}: usWin {os2.usWinAscent}/{os2.usWinDescent} does not cover glyphs reaching {hi}/{lo}")
+            if os2.usWeightClass != st.weight_class:
+                failures.append(f"{path.name}: weight class {os2.usWeightClass}, should be {st.weight_class}")
+            names = {rec.nameID: rec.toUnicode() for rec in font["name"].names if rec.platformID == 3}
+            want = (FAMILY, style) if st.ribbi else (f"{FAMILY} {style}", "Regular")
+            if (names.get(1), names.get(2)) != want:
+                failures.append(f"{path.name}: family/style {names.get(1)!r}/{names.get(2)!r}, should be {want}")
+            if not st.ribbi and (names.get(16), names.get(17)) != (FAMILY, style):
+                failures.append(f"{path.name}: typographic family/style {names.get(16)!r}/{names.get(17)!r}")
+            regular_order = TTFont(OUT / "AhmiPixel-Regular.ttf").getGlyphOrder() if ext == "ttf" else None
+            if regular_order is not None and font.getGlyphOrder() != regular_order:
+                failures.append(f"{path.name}: glyph set differs from Regular")
             version = font["name"].getDebugName(5)
             if version != f"Version {VERSION}":
                 failures.append(f"{path.name} says {version!r}, build.py says {VERSION}: run build.py")
